@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - codingnepalweb.com -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Login & Registration Form</title>
+  <!---Custom CSS File--->
+</head>
+<body>
+  <div class="container">
+
+
+    <div class="login form" *ngIf="LoginVisible">
+      <header>Login</header>
+        <input type="text" placeholder="Enter your email" [(ngModel)]="user.email">
+        <input type="password" placeholder="Enter your password" [(ngModel)]="user.password">
+        <a href="#">Forgot password?</a>
+        <input type="button" class="button" value="Login" (click)="Login()">
+      <div class="signup">
+        <span >Don't have an account?
+         <label (click)="SwitchDiv()">Signup</label>
+        </span>
+      </div>
+    </div>
+
+
+    <div class="registration form" *ngIf="RegisterVisible">
+      <header>Signup</header>
+        
+        <div style="display: flex;">
+          <input type="text" placeholder="Enter name" style="margin-right: 20px;" [(ngModel)]="user.nom">
+          <input type="text" placeholder="Enter surname" [(ngModel)]="user.prenom">
+        </div>
+
+        <input type="text" placeholder="Enter your email" [(ngModel)]="user.email">
+        <input type="password" placeholder="Create a password" [(ngModel)]="user.password">
+        <input type="password" placeholder="Confirm your password" [(ngModel)]="SecondPassword">
+        <input type="button" class="button" value="Signup" (click)="Register()">
+      <div class="signup">
+        <span >Already have an account?
+         <label (click)="SwitchDiv()">Login</label>
+        </span>
+      </div>
+    </div>
+
+
+  </div>
+</body>
+</html>
+<p-toast></p-toast>
