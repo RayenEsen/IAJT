@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -28,7 +28,13 @@ uploadSignature(): Observable<any>{
     const randomString = Math.random().toString(36).substring(2, 15); // Generate a random string
     const uniqueId = `${timestamp}_${randomString}`;
     this.formData.append('public_id', uniqueId);
-    return this.http.post(this.Url,this.formData)
+    return this.http.post(this.Url,this.formData).pipe(
+      tap({
+        complete: () => {
+          this.formData = new FormData();
+        }
+      })
+    )
 }
 
 

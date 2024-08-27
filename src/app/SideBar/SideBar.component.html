@@ -126,8 +126,8 @@
       <div class="profile-content">
         <!--<img src="image/profile.jpg" alt="profileImg">-->
       </div>
-      <div class="name-job EditProfile">
-        <div class="profile_name">{{this.sessionService.User.nom}} {{this.sessionService.User.prenom}}</div>
+      <div class="name-job EditProfile" (click)="EditProfile()">
+        <div class="profile_name">Rayen Triki</div>
         <div class="job">Web Developer</div>
       </div>
       <i class='bx bx-log-out' (click)="LogOut()"></i>
@@ -141,9 +141,10 @@
     <div style="margin-bottom: 100px;">
       <app-navbar></app-navbar>
      </div>
-    <div class="home-content">
+    <div class="home-content" style="margin-bottom: 1.5rem;">
       <i class='bx bx-menu' ></i>
       <span class="text" style="color: #1d1b31;">Ordinateurs </span>
+      
     </div>
 
     <router-outlet></router-outlet>

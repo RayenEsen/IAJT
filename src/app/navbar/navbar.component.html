@@ -1,16 +1,31 @@
-<nav class="navbar" style="padding-left: 100px;">
-  <div class="logo">
-    <img />
-    <ul>
-      <li><a >Soon</a></li>
-      <li><a >Soon</a></li>
-      <li><a >Soon</a></li>
-      <li><a >Soon</a></li>
-     
-    </ul>
-    
-   
+<nav class="navbar">
+  <div class="logo" style="margin-right: 100px;">
+    <img src="https://i.ibb.co/h2p6df1/172470710116744083.png" alt="toronto-logo-png-transparent-e1663874591459" border="0" style="opacity:0.6;">
   </div>
+
+  <div style="display: flex; font-size: 0.95rem; color: #757575; ">
+    <div pRipple class="container" style="display: flex; align-items: center; gap: 0.25rem;">
+      <i class="pi pi-home" style="font-size: 1rem; color: #757575;padding-top: 1px;"></i>
+      Home
+    </div>
+    
+    <div pRipple class="container" style="display: flex; align-items: center; gap: 0.25rem;">
+      <i class="pi pi-user" style="font-size: 1rem; color: #757575;padding-top: 1px;"></i>
+      Customers
+    </div>
+    
+    <div pRipple class="container" style="display: flex; align-items: center; gap: 0.25rem;">
+      <i class="pi pi-calendar" style="font-size: 1rem; color: #757575;padding-top: 1px;"></i>
+      Calendar
+    </div>
+  
+    <div pRipple class="container" style="display: flex; align-items: center; gap: 0.25rem;">
+      <i class="pi pi-chart-bar" style="font-size: 1rem; color: #757575;padding-top: 1px;"></i>
+      Stats
+    </div>
+  </div>
+  
+
   <div class="search">
     <span class="material-symbols-outlined">  </span>
    
@@ -22,13 +37,39 @@
 
   
   </div>
-  <nav>
-    <p-badge value="2" class="badge"></p-badge>
-    <p-button  icon="pi pi-bell" [rounded]="true" severity="secondary" [outlined]="true" class="bell-button"></p-button>
-    <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" (click)="menu.toggle($event)"   size="large"></p-avatar>
-    <p-menu #menu [model]="items" [popup]="true"></p-menu>
 
-  </nav>
+
+
+<div style="display: flex;">
+
+
+  <div pRipple class="container">
+    <i pbadge="" severity="danger" class="p-element pi pi-inbox text-base lg:text-2xl mr-2 lg:mr-0 p-overlay-badge">
+    </i>
+  </div>
+  
+  <div pRipple class="container" >
+    <i pBadge severity="danger" class="p-element pi pi-bell text-base lg:text-2xl mr-2 lg:mr-0 p-overlay-badge">
+      <span style="margin-top: 4px;" id="pr_id_7_badge" class="p-badge p-component p-badge-danger p-badge-dot"></span>
+    </i>
+  </div>
+  
+  
+
+  
+  <div pRipple class="container" (click)="menu.toggle($event)">
+    <p-avatar 
+        image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" 
+        styleClass="mr-2" 
+        shape="circle" 
+    />
+  </div>
+
+  <p-menu #menu [model]="ProfileItems" [popup]="true"></p-menu>
+
+  
+</div>
+
   
 </nav>
 

@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from '../Utils/Session.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MenuItem } from 'primeng/api';
 @Component({
   selector: 'app-SideBar',
   templateUrl: './SideBar.component.html',
   styleUrls: ['./SideBar.component.css']
 })
 export class SideBarComponent implements OnInit {
+
 
   constructor(public sessionService : SessionService , private router : Router) { }
 
@@ -38,6 +40,10 @@ export class SideBarComponent implements OnInit {
     this.router.navigate(['']);
   }
 
+  EditProfile()
+  {
+    this.router.navigate(['/Main/EditProfile']);
+  }
 
   
 

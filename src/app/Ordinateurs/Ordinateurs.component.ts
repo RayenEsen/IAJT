@@ -7,7 +7,10 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { UploadImageService } from '../Service/UploadImage.service';
 import { OrdinateurService } from '../Service/Ordinateur.service';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
+import { ViewChild } from '@angular/core';
+import { Table } from 'primeng/table';
+
 @Component({
   selector: 'app-Ordinateurs',
   templateUrl: './Ordinateurs.component.html',
@@ -43,6 +46,51 @@ export class OrdinateursComponent implements OnInit {
     'Gafsa',
     'Tozeur'
   ];
+
+
+  typesDesOrdinateurs: string[] = [
+    'Portable',
+    'Desktop',
+    'Serveur',
+    'Station de travail',
+    'Mini PC',
+    'Ordinateur tout-en-un',
+    'PC de jeu',
+    'PC de bureau',
+    'Ultrabook',
+    'Netbook',
+    'Chromebook',
+    'Tablet PC',
+    'MacBook',
+    'iMac',
+    'Raspberry Pi',
+    'Serveur de fichiers',
+    'NAS',
+    'PC industriel',
+    'PC embarqué',
+    'Thin Client'
+  ];
+
+
+  statusOrdinateur: string[] = [
+    'En service',
+    'En panne',
+    'En maintenance',
+    'Remplacé',
+    'Hors service',
+    'En stock',
+    'Désinfecté',
+    'Réparé',
+    'Prêté',
+    'Réservé',
+    'En cours de diagnostic',
+    'En attente de pièces',
+    'Mis à jour',
+    'Recyclé',
+    'En cours de configuration'
+  ];
+  
+  
   
   selectedordinateurs: Ordinateurs[] = []
   NewOrdinateur : Ordinateurs = new Ordinateurs;
@@ -70,7 +118,7 @@ export class OrdinateursComponent implements OnInit {
   ordinateursList: Ordinateurs[] = [];
 
 
-
+  nbrOrdinateurs : number = 0;
   originalOrdinateurList: Ordinateurs[] = []
   ngOnInit() {
     this.ordinateurService.GetOrdinateurs().subscribe({
@@ -78,6 +126,7 @@ export class OrdinateursComponent implements OnInit {
       {
         this.ordinateursList = response
         this.originalOrdinateurList = this.ordinateursList;
+        this.nbrOrdinateurs = response.length
       }
     })
   }
@@ -172,37 +221,41 @@ Import() {
           XLSX.utils.sheet_to_json(worksheet, { header: 1 }).slice(1).forEach((row: any) => {
               const ordinateur = new Ordinateurs();
 
-              ordinateur.nom = row[0] || ''; 
-              ordinateur.lieu = row[1] || ''; 
-              ordinateur.technicienResponsable = row[2] || ''; 
-              ordinateur.groupeResponsable = row[3] || '';
-              ordinateur.usagerNumero = row[4] || ''; 
-              ordinateur.usager = row[5] || '';
-              ordinateur.utilisateur = row[6] || ''; 
-              ordinateur.groupe = row[7] || ''; 
-              ordinateur.commentaires = row[8] || ''; 
-              ordinateur.statut = row[9] || ''; 
-              ordinateur.typeOrdinateur = row[10] || ''; 
-              ordinateur.fabricant = row[11] || ''; 
-              ordinateur.modele = row[12] || ''; 
-              ordinateur.numeroSerie = row[13] || ''; 
-              ordinateur.numeroInventaire = row[14] || ''; 
-              ordinateur.reseau = row[15] || ''; 
-              ordinateur.uuid = row[16] || ''; 
-              ordinateur.sourceMiseAJour = row[17] || '';
+              ordinateur.nom = row[1] || ''; 
+              ordinateur.lieu = row[2] || ''; 
+              ordinateur.technicienResponsable = row[3] || ''; 
+              ordinateur.groupeResponsable = row[4] || '';
+              ordinateur.usagerNumero = row[5] || ''; 
+              ordinateur.usager = row[6] || '';
+              ordinateur.utilisateur = row[7] || ''; 
+              ordinateur.groupe = row[8] || ''; 
+              ordinateur.commentaires = row[9] || ''; 
+              ordinateur.statut = row[10] || ''; 
+              ordinateur.typeOrdinateur = row[11] || ''; 
+              ordinateur.fabricant = row[12] || ''; 
+              ordinateur.modele = row[13] || ''; 
+              ordinateur.numeroSerie = row[14] || ''; 
+              ordinateur.numeroInventaire = row[15] || ''; 
+              ordinateur.reseau = row[16] || ''; 
+              ordinateur.uuid = row[17] || ''; 
+              ordinateur.sourceMiseAJour = row[18] || '';
+              ordinateur.imageurl = row[19] || '';
 
-              importedAssets.push(ordinateur);
+              this.ordinateurService.CreateOrdinateur(ordinateur).subscribe({
+                next : (response)  => {
+                  this.ordinateursList.push(response)
+                }
+              })
               
           });
-
-          this.ordinateursList.push(...importedAssets);
-          this.messageService.add({ severity: 'success', summary: 'Importer', detail: "L'importation a été effectuée avec succès." });
       };
 
       reader.readAsArrayBuffer(file);
   };
 
   input.click();
+  this.messageService.add({ severity: 'success', summary: 'Importer', detail: "L'importation a été effectuée avec succès." });
+
 }
 
 
@@ -230,12 +283,24 @@ onFileSelected(event: any) {
 
     // Pass the selected file to the upload service
     this.uploadimage.GetImage(file);
+  }
+}
 
-    // Clear the file input after use
-    const fileInput = document.getElementById('file-input') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = '';
-    }
+
+UploadImageAndGetUrl(onComplete: (imageUrl: string | null) => void) {
+  if (this.uploadimage.formData) {
+    this.uploadimage.uploadSignature().subscribe({
+      next: (response) => {
+        onComplete(response.secure_url);
+      },
+      error: (err) => {
+        console.error('Upload failed:', err);
+        onComplete(null); // Call onComplete with null if the upload fails
+      }
+    });
+  } else {
+    // Call onComplete with null if there's no image to upload
+    onComplete(null);
   }
 }
 
@@ -243,11 +308,10 @@ onFileSelected(event: any) {
 SaveNewOrdinateur() {
   this.loading = true;
 
-  // Define a method to handle the completion of the upload
-  const handleUploadComplete = (response?: any) => {
-    if (response) {
-      // Assign values directly without optional chaining
-      this.NewOrdinateur.imageurl = response.secure_url;
+  // Call UploadImageAndGetUrl and pass the callback directly
+  this.UploadImageAndGetUrl((imageUrl) => {
+    if (imageUrl) {
+      this.NewOrdinateur.imageurl = imageUrl;
     }
 
     this.ordinateurService.CreateOrdinateur(this.NewOrdinateur).subscribe({
@@ -260,29 +324,19 @@ SaveNewOrdinateur() {
           summary: 'Ajouter',
           detail: "Le nouvel ordinateur a été ajouté avec succès."
         });
+        // Clear the file input after use
+        const fileInput = document.getElementById('file-input') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = '';
+        }
         this.AddOrdinateurVisibile = !this.AddOrdinateurVisibile;
       },
       error: (err) => {
         console.error('Error creating ordinateur:', err);
-        this.loading = false; // Ensure loading is stopped even on error
+        this.loading = false;
       }
     });
-    
-  };
-
-  // If there's an image to upload
-  if (this.uploadimage.formData) {
-    this.uploadimage.uploadSignature().subscribe({
-      next: handleUploadComplete,
-      error: (err) => {
-        console.error('Upload failed:', err);
-        handleUploadComplete(); // Still handle the completion even if the upload fails
-      }
-    });
-  } else {
-    // If no image to upload, handle the completion directly
-    handleUploadComplete();
-  }
+  });
 }
 
 
@@ -320,22 +374,31 @@ ModifyOrdinateur(ordinateur: Ordinateurs) {
 SaveChanges() {
   this.loading = true;
 
+  // Define a callback to handle saving the ordinateur
   const saveOrdinateurChanges = () => {
     this.ordinateurService.UpdateOrdinateur(this.ViewedOrdinateur.id, this.ViewedOrdinateur).subscribe({
       next: (response) => {
         // Find the existing Ordinateur in the list
-        let OldOrdinateur = this.ordinateursList.find(item => item.numeroSerie === this.ViewedOrdinateur.numeroSerie);
+        const oldOrdinateur = this.ordinateursList.find(item => item.numeroSerie === this.ViewedOrdinateur.numeroSerie);
         
-        if (OldOrdinateur) {
+        if (oldOrdinateur) {
           // Merge changes from ViewedOrdinateur into OldOrdinateur
-          Object.assign(OldOrdinateur, this.ViewedOrdinateur);
+          Object.assign(oldOrdinateur, this.ViewedOrdinateur);
         }
+
         this.ModifyOrdinateurVisibile = !this.ModifyOrdinateurVisibile;
         this.messageService.add({
           severity: 'success',
           summary: 'Mise à jour',
-          detail: "Les modifications ont été enregistrées avec succès."
+          detail: 'Les modifications ont été enregistrées avec succès.'
         });
+
+        // Clear the file input after use
+        const fileInput = document.getElementById('file-input') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = '';
+        }
+
         this.loading = false;
       },
       error: (err) => {
@@ -345,34 +408,35 @@ SaveChanges() {
     });
   };
 
-  // Check if there's an image to update
-  if (this.uploadimage.formData.has('file')) {
-    this.uploadimage.uploadSignature().subscribe({
-      next: (response) => {
-        // Update image details
-        this.ViewedOrdinateur.imageurl = response.secure_url;
-        // Proceed to save changes after successful image upload
-        saveOrdinateurChanges();
-      },
-      error: (err) => {
-        console.error('Error updating image:', err);
-        // Proceed to save changes even if the image upload fails
-        saveOrdinateurChanges();
-      }
-    });
-  } else {
-    // Proceed to save changes if no image is provided
+  // Use UploadImageAndGetUrl to handle the image upload and get the URL
+  this.UploadImageAndGetUrl((imageUrl: string | null) => {
+    if (imageUrl) {
+      this.ViewedOrdinateur.imageurl = imageUrl;
+    }
+
+    // Proceed to save changes after handling the image upload
     saveOrdinateurChanges();
-  }
+  });
 }
 
 
-DisableModify() {
+DisableModify(): boolean {
   // Find the original ordinateur in the ordinateursList that matches the ViewedOrdinateur
   const OldOrdinateur = this.ordinateursList.find(item => item.id === this.ViewedOrdinateur.id);
 
-  // Compare the ViewedOrdinateur with the found original ordinateur
-  return JSON.stringify(this.ViewedOrdinateur) !== JSON.stringify(OldOrdinateur);
+  if (!OldOrdinateur) {
+    // If no matching ordinateur is found, consider the object modified
+    return true;
+  }
+
+  // Compare the properties of ViewedOrdinateur with the found original ordinateur
+  const isPropertiesModified = JSON.stringify(this.ViewedOrdinateur) !== JSON.stringify(OldOrdinateur);
+
+  // Compare the image URLs separately
+  const isImageModified = this.ViewedOrdinateur.imageurl !== OldOrdinateur.imageurl;
+
+  // Return true if either properties or image URL have changed
+  return isPropertiesModified || isImageModified;
 }
 
 

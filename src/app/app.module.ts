@@ -36,6 +36,8 @@ import { EditProfileComponent } from './EditProfile/EditProfile.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { MessagesModule } from 'primeng/messages';
+import { RippleModule } from 'primeng/ripple';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 
 @NgModule({
   declarations: [																			
@@ -76,6 +78,8 @@ import { MessagesModule } from 'primeng/messages';
     PasswordModule,
     OverlayPanelModule,
     MessagesModule,
+    RippleModule,
+    BreadcrumbModule,
   ],
   providers: [MessageService , ConfirmationService],
   bootstrap: [AppComponent]
