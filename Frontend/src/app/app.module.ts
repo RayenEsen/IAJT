@@ -38,6 +38,11 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { MessagesModule } from 'primeng/messages';
 import { RippleModule } from 'primeng/ripple';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { PanelModule } from 'primeng/panel';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { SpeedDialModule } from 'primeng/speeddial';
 
 @NgModule({
   declarations: [																			
@@ -51,6 +56,8 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
    ],
   imports: [
     BrowserModule,
+    InputGroupModule,
+    InputGroupAddonModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ButtonModule,
@@ -80,6 +87,9 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
     MessagesModule,
     RippleModule,
     BreadcrumbModule,
+    PanelModule,
+    SplitButtonModule,
+    SpeedDialModule,
   ],
   providers: [MessageService , ConfirmationService],
   bootstrap: [AppComponent]

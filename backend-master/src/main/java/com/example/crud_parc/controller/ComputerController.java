@@ -50,30 +50,16 @@ public class ComputerController {
         Computer computer = computerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Computer not exist with id :" + id));
 
-        computer.setNom(computerDetails.getNom());
-        computer.setLieu(computerDetails.getLieu());
-        computer.setTechnicienResponsable(computerDetails.getTechnicienResponsable());
-        computer.setGroupeResponsable(computerDetails.getGroupeResponsable());
-        computer.setUsagerNumero(computerDetails.getUsagerNumero());
-        computer.setUsager(computerDetails.getUsager());
-        computer.setUtilisateur(computerDetails.getUtilisateur());
-        computer.setGroupe(computerDetails.getGroupe());
-        computer.setCommentaires(computerDetails.getCommentaires());
-        computer.setStatut(computerDetails.getStatut());
-        computer.setTypeOrdinateur(computerDetails.getTypeOrdinateur());
-        computer.setFabricant(computerDetails.getFabricant());
         computer.setModele(computerDetails.getModele());
-        computer.setNumeroSerie(computerDetails.getNumeroSerie());
-        computer.setNumeroInventaire(computerDetails.getNumeroInventaire());
-        computer.setReseau(computerDetails.getReseau());
-        computer.setUuid(computerDetails.getUuid());
-        computer.setSourceMiseAJour(computerDetails.getSourceMiseAJour());
-        computer.setImageurl(computerDetails.getImageurl());
+        computer.setNom(computerDetails.getNom());
+        computer.setNumSerie(computerDetails.getNumSerie());
+        computer.setStatut(computerDetails.getStatut());
+        computer.setTechnicienResponsable(computerDetails.getTechnicienResponsable());
+        computer.setUtilisateur(computerDetails.getUtilisateur());
 
         Computer updatedComputer = computerRepository.save(computer);
         return ResponseEntity.ok(updatedComputer);
     }
-
 //delete
     @DeleteMapping("/computers/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteComputer(@PathVariable Long id) {

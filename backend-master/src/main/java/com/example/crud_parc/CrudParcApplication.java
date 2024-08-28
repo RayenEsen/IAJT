@@ -10,4 +10,5 @@ public class CrudParcApplication {
 		SpringApplication.run(CrudParcApplication.class, args);
 	}
 
+	
 }

@@ -1,3 +1,4 @@
+import { ParkUser } from "./ParkUser";
 export class Ordinateurs {
     id : number = 0;
     nom: string = '';
@@ -6,7 +7,7 @@ export class Ordinateurs {
     groupeResponsable: string = '';
     usagerNumero: string = '';
     usager: string = '';
-    utilisateur: string = '';
+    utilisateur: ParkUser = new ParkUser;
     groupe: string = '';
     commentaires: string = '';
     statut: string = '';

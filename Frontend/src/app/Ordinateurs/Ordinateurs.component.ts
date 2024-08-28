@@ -10,7 +10,9 @@ import { OrdinateurService } from '../Service/Ordinateur.service';
 import { forkJoin, Observable, of } from 'rxjs';
 import { ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
-
+import { PrimeNGConfig } from 'primeng/api';
+import { ParkUser } from '../Shared/ParkUser';
+import { ParkuserService } from '../Service/Parkuser.service';
 @Component({
   selector: 'app-Ordinateurs',
   templateUrl: './Ordinateurs.component.html',
@@ -18,7 +20,7 @@ import { Table } from 'primeng/table';
 })
 export class OrdinateursComponent implements OnInit {
 
-  constructor(public ordinateurService : OrdinateurService, public uploadimage: UploadImageService,private confirmationService: ConfirmationService ,  private messageService: MessageService , private router : Router , private route: ActivatedRoute) { }
+  constructor( public parkuserservice : ParkuserService,private primengConfig: PrimeNGConfig, public ordinateurService : OrdinateurService, public uploadimage: UploadImageService,private confirmationService: ConfirmationService ,  private messageService: MessageService , private router : Router , private route: ActivatedRoute) { }
 
   AddOrdinateurVisibile : boolean = false;
   ModifyOrdinateurVisibile : boolean = false;
@@ -46,6 +48,24 @@ export class OrdinateursComponent implements OnInit {
     'Gafsa',
     'Tozeur'
   ];
+
+
+
+
+
+  UserOptions =  [
+    {
+        label: 'Ajouter',
+        icon: 'pi pi-plus',
+        command : () => this.AddParkUser() 
+    },
+    {
+        label: 'Supprimer',
+        icon: 'pi pi-minus',
+        command : () => this.RemoveParkUser() 
+    }
+];
+  
 
 
   typesDesOrdinateurs: string[] = [
@@ -120,6 +140,7 @@ export class OrdinateursComponent implements OnInit {
 
   nbrOrdinateurs : number = 0;
   originalOrdinateurList: Ordinateurs[] = []
+  users: ParkUser[] = [];
   ngOnInit() {
     this.ordinateurService.GetOrdinateurs().subscribe({
       next : (response : Ordinateurs[]) =>
@@ -127,6 +148,11 @@ export class OrdinateursComponent implements OnInit {
         this.ordinateursList = response
         this.originalOrdinateurList = this.ordinateursList;
         this.nbrOrdinateurs = response.length
+      }
+    })
+    this.parkuserservice.getAllUsers().subscribe({
+      next : (response) => { 
+        this.users = response;
       }
     })
   }
@@ -251,10 +277,11 @@ Import() {
       };
 
       reader.readAsArrayBuffer(file);
+      this.messageService.add({ severity: 'success', summary: 'Importer', detail: "L'importation a été effectuée avec succès." });
+
   };
 
   input.click();
-  this.messageService.add({ severity: 'success', summary: 'Importer', detail: "L'importation a été effectuée avec succès." });
 
 }
 
@@ -305,8 +332,15 @@ UploadImageAndGetUrl(onComplete: (imageUrl: string | null) => void) {
 }
 
 
+
 SaveNewOrdinateur() {
   this.loading = true;
+
+  if (typeof this.selectedUser !== 'string') {
+    this.NewOrdinateur.utilisateur = this.selectedUser;
+  } else {
+    this.NewOrdinateur.utilisateur = ({ ...this.newParkUser });
+  }
 
   // Call UploadImageAndGetUrl and pass the callback directly
   this.UploadImageAndGetUrl((imageUrl) => {
@@ -317,18 +351,13 @@ SaveNewOrdinateur() {
     this.ordinateurService.CreateOrdinateur(this.NewOrdinateur).subscribe({
       next: (response) => {
         this.ordinateursList.push(response);
-        this.NewOrdinateur = new Ordinateurs();
         this.loading = false;
         this.messageService.add({
           severity: 'success',
           summary: 'Ajouter',
           detail: "Le nouvel ordinateur a été ajouté avec succès."
         });
-        // Clear the file input after use
-        const fileInput = document.getElementById('file-input') as HTMLInputElement;
-        if (fileInput) {
-          fileInput.value = '';
-        }
+        this.ClearData()
         this.AddOrdinateurVisibile = !this.AddOrdinateurVisibile;
       },
       error: (err) => {
@@ -340,9 +369,11 @@ SaveNewOrdinateur() {
 }
 
 
+
+
 VerifForm()
 {
-  return !(this.NewOrdinateur.nom.length>0 && this.NewOrdinateur.statut.length>0 && this.NewOrdinateur.lieu.length>0 && this.NewOrdinateur.typeOrdinateur.length>0 && this.NewOrdinateur.groupeResponsable.length>0 && this.NewOrdinateur.technicienResponsable.length>0 && this.NewOrdinateur.fabricant.length>0 && this.NewOrdinateur.modele.length>0 && this.NewOrdinateur.utilisateur.length>0)
+  return !(this.NewOrdinateur.nom.length>0 && this.NewOrdinateur.statut.length>0 && this.NewOrdinateur.lieu.length>0 && this.NewOrdinateur.typeOrdinateur.length>0 && this.NewOrdinateur.groupeResponsable.length>0 && this.NewOrdinateur.technicienResponsable.length>0 && this.NewOrdinateur.fabricant.length>0 && this.NewOrdinateur.modele.length>0 && this.NewOrdinateur.utilisateur.nom.length>0)
 }
 
 Search2() {
@@ -368,11 +399,30 @@ ViewedOrdinateur : Ordinateurs = new Ordinateurs;
 ModifyOrdinateur(ordinateur: Ordinateurs) {
   // Create a deep copy of the ordinateur object
   this.ViewedOrdinateur = { ...ordinateur };
+  this.selectedUser = this.ViewedOrdinateur.utilisateur
   this.ModifyOrdinateurVisibile = !this.ModifyOrdinateurVisibile;
 }
 
+
+ClearData()
+{
+  this.NewOrdinateur = new Ordinateurs();
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  if (fileInput) {
+    fileInput.value = '';
+  }
+  this.selectedUser = null
+}
+
+
 SaveChanges() {
   this.loading = true;
+
+  if (typeof this.selectedUser !== 'string') {
+    this.ViewedOrdinateur.utilisateur = this.selectedUser;
+  } else {
+    this.ViewedOrdinateur.utilisateur = ({ ...this.newParkUser });
+  }
 
   // Define a callback to handle saving the ordinateur
   const saveOrdinateurChanges = () => {
@@ -392,13 +442,7 @@ SaveChanges() {
           summary: 'Mise à jour',
           detail: 'Les modifications ont été enregistrées avec succès.'
         });
-
-        // Clear the file input after use
-        const fileInput = document.getElementById('file-input') as HTMLInputElement;
-        if (fileInput) {
-          fileInput.value = '';
-        }
-
+        this.ClearData()
         this.loading = false;
       },
       error: (err) => {
@@ -420,11 +464,12 @@ SaveChanges() {
 }
 
 
+
 DisableModify(): boolean {
   // Find the original ordinateur in the ordinateursList that matches the ViewedOrdinateur
   const OldOrdinateur = this.ordinateursList.find(item => item.id === this.ViewedOrdinateur.id);
 
-  if (!OldOrdinateur) {
+  if (!OldOrdinateur || this.selectedUser) {
     // If no matching ordinateur is found, consider the object modified
     return true;
   }
@@ -441,5 +486,80 @@ DisableModify(): boolean {
 
 
 
+
+selectedUser: any;
+newParkUser : ParkUser = new ParkUser()
+
+// Method to add a ParkUser
+AddParkUser() {
+  if(typeof this.selectedUser == "string")
+  {
+  // Assign the selected user's name to newParkUser
+  this.newParkUser.nom = this.selectedUser;
+
+  // Check if the ParkUser already exists in the users array based on the 'nom'
+  const exists = this.users.some((user) => user.nom === this.newParkUser.nom);
+
+  // Only add the ParkUser if it does not already exist
+  if (!exists) {
+    this.parkuserservice.createUser(this.newParkUser).subscribe({
+      next : (response) =>{
+        this.users.push({ ...response });
+        // Use messageService to log the success of adding a ParkUser
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Ajout',
+          detail: 'Le nouvel utilisateur a été ajouté avec succès.',
+        });
+      }
+    })
+  } else {
+    // Use messageService to log that the ParkUser already exists
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Duplication',
+      detail: 'Cet utilisateur existe déjà et ne sera pas ajouté.',
+    });
+  }
+  }
+  else return;
+}
+
+
+
+
+
+
+
+// Method to remove a ParkUser
+RemoveParkUser() {
+    // Find the ParkUser to be removed based on the 'nom' matching selectedUser
+    const userToRemove = this.users.find(user => user.nom === this.selectedUser.nom);
+
+    // If the user exists, proceed with removal
+    if (userToRemove) {
+      // Call the service to delete the user by their ID
+      this.parkuserservice.deleteUser(userToRemove.id).subscribe({
+        next: () => {
+          // Remove the user from the local users array
+          this.users = this.users.filter(user => user.id !== userToRemove.id);
+
+          // Use messageService to log the success of removing a ParkUser
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Suppression',
+            detail: 'L’utilisateur a été supprimé avec succès.',
+          });
+        }
+      });
+    } else {
+      // Use messageService to log that the ParkUser does not exist
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Non trouvé',
+        detail: 'Cet utilisateur n’existe pas et ne peut pas être supprimé.',
+      });
+    }
+  } 
 
 }

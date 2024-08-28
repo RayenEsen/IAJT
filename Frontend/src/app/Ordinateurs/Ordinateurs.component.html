@@ -13,7 +13,7 @@
               <div class="row">
                 <div class="col-xl-3 col-lg-6">
                   <div class="card card-stats mb-4 mb-xl-0">
-                    <div class="card-body">
+                    <div class="card-body" pRipple>
                       <div class="row">
                         <div class="col">
                           <h5 class="card-title text-uppercase text-muted mb-0">Traffic</h5>
@@ -34,7 +34,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-6">
                   <div class="card card-stats mb-4 mb-xl-0">
-                    <div class="card-body">
+                    <div class="card-body" pRipple>
                       <div class="row">
                         <div class="col">
                           <h5 class="card-title text-uppercase text-muted mb-0">New users</h5>
@@ -55,7 +55,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-6">
                   <div class="card card-stats mb-4 mb-xl-0">
-                    <div class="card-body">
+                    <div class="card-body" pRipple>
                       <div class="row">
                         <div class="col">
                           <h5 class="card-title text-uppercase text-muted mb-0">Sales</h5>
@@ -76,7 +76,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-6">
                   <div class="card card-stats mb-4 mb-xl-0">
-                    <div class="card-body">
+                    <div class="card-body" pRipple>
                       <div class="row">
                         <div class="col">
                           <h5 class="card-title text-uppercase text-muted mb-0">Performance</h5>
@@ -167,7 +167,7 @@
             </td>
             <td>{{ordinateur.nom}}</td>
             <td>{{ordinateur.technicienResponsable}}</td>
-            <td>{{ordinateur.utilisateur}}</td>
+            <td>{{ordinateur.utilisateur.nom}}</td>
             <td>{{ordinateur.modele}}</td>
             <td>{{ordinateur.statut}}</td>
         </tr>        
@@ -195,7 +195,7 @@
 <p-toast position="bottom-right"  />
 
 
-<p-dialog [(visible)]="AddOrdinateurVisibile"  [modal]="true" header="Nouveaux ordinateur" [style]="{ width: '50rem' }" >
+<p-dialog [(visible)]="AddOrdinateurVisibile" (onHide)="this.ClearData()" [modal]="true" header="Nouveaux ordinateur" [style]="{ width: '50rem' }" >
 <div class="formbold-main-wrapper">
   <div class="formbold-form-wrapper">
     <svg class="formbold-img" width="360" height="260" viewBox="0 0 360 260" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 175px;">
@@ -335,7 +335,7 @@
         [(ngModel)]="NewOrdinateur.statut"
         [checkmark]="true" 
         ngClass="custom-dropdown"
-        placeholder="Sélectionnez statut" />
+        placeholder="Statut" />
       </div>
 
       <div class="formbold-mb-3" style="margin-top: 10px;">
@@ -346,7 +346,7 @@
           [(ngModel)]="NewOrdinateur.lieu"
           [checkmark]="true" 
           ngClass="custom-dropdown"
-          placeholder="Sélectionnez lieu" />
+          placeholder="Lieu" />
       </div>
 
       <div class="formbold-mb-3" style="margin-top: 10px;">
@@ -357,7 +357,7 @@
         [(ngModel)]="NewOrdinateur.typeOrdinateur"
         [checkmark]="true" 
         ngClass="custom-dropdown"
-        placeholder="Sélectionnez type" />
+        placeholder="Type" />
       </div>
 
       <div class="formbold-input-wrapp formbold-mb-3" style="margin-top: 10px;">
@@ -464,14 +464,33 @@
 
       <div class="formbold-mb-3" style="margin-top: 10px;">
         <label for="age" class="formbold-form-label"> Utilisateur *</label>
-        <input
-          type="text"
-          name="age"
-          id="age"
-          placeholder="Utilisateur"
-          class="formbold-form-input"
-          [(ngModel)]="NewOrdinateur.utilisateur"
-        />
+
+          <p>
+            <p-inputGroup>
+              
+              <p-dropdown 
+              [options]="users" 
+              [(ngModel)]="selectedUser"
+              [checkmark]="true" 
+              placeholder="Utilisateur"
+              [editable]="true" 
+              optionLabel="nom"
+              ngClass="custom-dropdown test "
+               />
+               
+                    
+               <div style="position: relative;">
+                <button  [text]="true" type="button" pButton icon="pi pi-bars" class="p-button-secondary" (click)="menu.toggle($event)"></button>
+                <p-menu #menu [model]="UserOptions"  [popup]="true" appendTo="body" ngstyle="position: absolute; top: 100%; left: 0;"></p-menu>
+              </div>
+              
+              
+
+
+            </p-inputGroup>
+          </p>
+
+
       </div>
 
       <div class="formbold-mb-3" style="margin-top: 10px;">
@@ -706,14 +725,30 @@
   
         <div class="formbold-mb-3" style="margin-top: 10px;">
           <label for="age" class="formbold-form-label"> Utilisateur *</label>
-          <input
-            type="text"
-            name="age"
-            id="age"
-            placeholder="Utilisateur"
-            class="formbold-form-input"
-            [(ngModel)]="ViewedOrdinateur.utilisateur"
-          />
+          <p>
+            <p-inputGroup>
+              
+              <p-dropdown 
+              [options]="users" 
+              [(ngModel)]="selectedUser"
+              [checkmark]="true" 
+              placeholder="Utilisateur"
+              [editable]="true" 
+              optionLabel="nom"
+              ngClass="custom-dropdown test "
+               />
+               
+                    
+               <div style="position: relative;">
+                <button  [text]="true" type="button" pButton icon="pi pi-bars" class="p-button-secondary" (click)="menu.toggle($event)"></button>
+                <p-menu #menu [model]="UserOptions"  [popup]="true" appendTo="body" ngstyle="position: absolute; top: 100%; left: 0;"></p-menu>
+              </div>
+              
+              
+
+
+            </p-inputGroup>
+          </p>
         </div>
   
         <div class="formbold-mb-3" style="margin-top: 10px;">

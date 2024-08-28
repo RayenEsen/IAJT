@@ -422,3 +422,12 @@ a.text-white:focus {
   color: #8898aa !important;
 }
 
+.test ::ng-deep .p-dropdown-trigger {
+  margin-right: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+
