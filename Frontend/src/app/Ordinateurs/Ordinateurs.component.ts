@@ -13,6 +13,7 @@ import { Table } from 'primeng/table';
 import { PrimeNGConfig } from 'primeng/api';
 import { ParkUser } from '../Shared/ParkUser';
 import { ParkuserService } from '../Service/Parkuser.service';
+
 @Component({
   selector: 'app-Ordinateurs',
   templateUrl: './Ordinateurs.component.html',
@@ -153,6 +154,7 @@ export class OrdinateursComponent implements OnInit {
     this.parkuserservice.getAllUsers().subscribe({
       next : (response) => { 
         this.users = response;
+        console.log(this.users)
       }
     })
   }
@@ -504,7 +506,8 @@ AddParkUser() {
   if (!exists) {
     this.parkuserservice.createUser(this.newParkUser).subscribe({
       next : (response) =>{
-        this.users.push({ ...response });
+        this.users = [...this.users, { ...response }];
+        this.selectedUser = response;
         // Use messageService to log the success of adding a ParkUser
         this.messageService.add({
           severity: 'success',
@@ -543,6 +546,7 @@ RemoveParkUser() {
         next: () => {
           // Remove the user from the local users array
           this.users = this.users.filter(user => user.id !== userToRemove.id);
+          this.selectedUser = null
 
           // Use messageService to log the success of removing a ParkUser
           this.messageService.add({

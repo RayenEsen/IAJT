@@ -15,9 +15,12 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder; // Remarquez l'utilisation de l'interface PasswordEncoder
+    private PasswordEncoder passwordEncoder;
 
     public User registerUser(User newUser) {
+        if (userExists(newUser.getEmail())) {
+            throw new IllegalArgumentException("User already exists");
+        }
         String encodedPassword = passwordEncoder.encode(newUser.getPassword());
         newUser.setPassword(encodedPassword);
         return userRepository.save(newUser);
@@ -29,5 +32,9 @@ public class UserService {
             return user;
         }
         return Optional.empty();
+    }
+
+    public boolean userExists(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 }

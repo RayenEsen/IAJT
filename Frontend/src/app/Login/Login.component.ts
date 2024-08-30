@@ -22,16 +22,36 @@ export class LoginComponent implements OnInit {
   }
 
   Login() {
-    const {email , password} = this.user
-    if ( !email || !password)
-    {
-      this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Tous les champs sont obligatoires.' });
+    const { email, password } = this.user;
+  
+    // Check if all fields are filled
+    if (!email || !password) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: 'Tous les champs sont obligatoires.'
+      });
       return;
     }
-    this.sessionService.sessionStart(this.user);
-    this.messageService.add({ severity: 'success', summary: 'Connexion réussie', detail: 'Bonjour.' });
-    this.router.navigate(['Main/Ordinateurs']);
+  
+    // Call the userService to log in
+    this.userService.loginUser(email, password).subscribe({
+      next: (response) => {
+        this.sessionService.sessionStart(response)
+        console.log(this.sessionService.User)
+        this.router.navigate(['Main/Ordinateurs']);
+      },
+      error: (error) => {
+        // Handle error response
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur de connexion',
+          detail: 'Identifiants incorrects ou problème de connexion.'
+        });
+      }
+    });
   }
+  
 
 // Function to validate user inputs
 validateUserInputs(): boolean {
@@ -71,14 +91,20 @@ Register() {
       this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Inscription réussie.' });
       // Optionally clear the user object or reset the form
       this.user = new User();
-      this.SwitchDiv(); // Call any other function if needed
+      this.SecondPassword = '';
+      this.SwitchDiv(); 
     },
     error: (error) => {
-      // Optionally handle the error without extensive logging
-      this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Échec de l\'inscription.' });
+      // Check if the error message indicates that the user already exists
+      if (error.error === "L'utilisateur existe déjà") {
+        this.messageService.add({ severity: 'warn', summary: 'Attention', detail: "Cet utilisateur existe déjà." });
+      } else {
+        this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Échec de l\'inscription.' });
+      }
     }
   });
 }
+
 
   
   

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../Shared/User';
@@ -18,4 +18,15 @@ export class UserService {
 registerUser(newUser: User): Observable<User> {
   return this.http.post<User>(`${this.url}/register`, newUser);
 }
+
+loginUser(email: string, password: string): Observable<any> {
+  const params = new HttpParams()
+    .set('email', email)
+    .set('password', password);
+
+  return this.http.post<string>(`${this.url}/login`, null, { params });
+}
+
+
+
 }
