@@ -43,7 +43,7 @@ export class NavbarComponent implements OnInit {
               {
                 label: 'Modifier',
                 icon: 'pi pi-eye',
-                command: () => this.router.navigate(['/Main/EditProfile'])
+                command: () => this.router.navigate(['/Accueil/EditProfile'])
               },
               {
                 label: 'Logout',

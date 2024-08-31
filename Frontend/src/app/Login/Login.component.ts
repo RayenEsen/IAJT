@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         this.sessionService.sessionStart(response)
         console.log(this.sessionService.User)
-        this.router.navigate(['Main/Ordinateurs']);
+        this.router.navigate(['Accueil/Ordinateurs']);
       },
       error: (error) => {
         // Handle error response

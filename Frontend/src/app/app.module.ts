@@ -43,19 +43,23 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { SpeedDialModule } from 'primeng/speeddial';
+import { TicketComponent } from './Ticket/Ticket.component';
+import { RatingModule } from 'primeng/rating';
 
 @NgModule({
-  declarations: [																			
+  declarations: [																				
     AppComponent,
       SideBarComponent,
       OrdinateursComponent,
       LoginComponent,
       NotConnectedComponent,
       EditProfileComponent,
-      NavbarComponent
+      NavbarComponent,
+      TicketComponent
    ],
   imports: [
     BrowserModule,
+    RatingModule,
     InputGroupModule,
     InputGroupAddonModule,
     AppRoutingModule,

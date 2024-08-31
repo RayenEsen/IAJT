@@ -230,7 +230,7 @@
   
 }
 .home-section .home-content{
-  height: 60px;
+  height: 80px;
   display: flex;
   align-items: center;
 }
@@ -257,3 +257,17 @@
 .EditProfile:hover{
   cursor: pointer;
 }
+
+  ::ng-deep .p-breadcrumb {
+  background: inherit;
+  border: 0px solid #e5e7eb;
+  border-radius: 0px;
+  padding: 0rem;
+}
+
+.Breadcrum ::ng-deep .p-menuitem-text {
+  font-weight: bold;
+  color: #4b5563;
+  font-size: x-large;
+}
+

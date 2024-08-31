@@ -10,8 +10,14 @@ import { MenuItem } from 'primeng/api';
 export class SideBarComponent implements OnInit {
 
 
-  constructor(public sessionService : SessionService , private router : Router) { }
+  constructor(public sessionService : SessionService , private router : Router , private route: ActivatedRoute) { }
 
+
+  items: MenuItem[] = [];
+
+
+  home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
+  
   ngOnInit() {
     const arrows = document.querySelectorAll(".arrow");
     arrows.forEach(arrow => {
@@ -32,8 +38,12 @@ export class SideBarComponent implements OnInit {
     } else {
       console.error("Sidebar or sidebar button not found");
     }
+  
+    this.items = this.router.url.split('/').filter(segment => segment).map(segment => ({ label: segment }));
+
   }
 
+  
   LogOut()
   {
     this.sessionService.sessionDestroy();

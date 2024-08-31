@@ -6,6 +6,7 @@ import { SideBarComponent } from './SideBar/SideBar.component';
 import { OrdinateursComponent } from './Ordinateurs/Ordinateurs.component';
 import { AuthGuard } from './auth.guard';
 import { EditProfileComponent } from './EditProfile/EditProfile.component';
+import { TicketComponent } from './Ticket/Ticket.component';
 
 const routes: Routes = [
   {
@@ -16,12 +17,13 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'Main',
+    path: 'Accueil',
     component: SideBarComponent,
     canActivate: [AuthGuard], 
     children: [
       { path: 'Ordinateurs', component: OrdinateursComponent }, 
       { path: 'EditProfile', component: EditProfileComponent }, 
+      { path: 'Tickets', component: TicketComponent }, 
     ]
   }
 ];
