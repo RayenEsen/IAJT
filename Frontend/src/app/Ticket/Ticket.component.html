@@ -1,3 +1,5 @@
+
+
 <div style="padding: 0 30px 30px 30px;">
 
 
@@ -6,7 +8,8 @@
   <h2 style="margin: 0;">Tickets ouverts</h2>
 
   <div style="display: flex; align-items: center;">
-      <i class="pi pi-star click" style="font-size: 1.5rem; margin-right: 10px;"></i>
+      <i class="pi pi-star click" (click)="ShowStaredTickets()" style="font-size: 1.5rem; margin-right: 20px;" *ngIf="!filteredbystar"></i>
+      <i class="pi pi-star-fill click" (click)="ShowStaredTickets()" style="font-size: 1.5rem; margin-right: 10px;" *ngIf="filteredbystar"></i>
       <i class="pi pi-ellipsis-h click" 
          style="font-size: 1.5rem; cursor: pointer;" 
          (click)="menu.toggle($event)"></i>
@@ -14,10 +17,51 @@
   </div>
 </div>
 
-    
+
+<div style="display: flex; padding-top: 20px;">
+  <!-- First div with fixed width -->
+  <div style="width: 400px; padding-right: 20px;">
+    <div class="card card-stats mb-4 mb-xl-0" style="width: 100%; height: auto; padding: 0; border: 1px solid rgba(0, 0, 0, .05); border-radius: .375rem; background-color: #fff;">
+      <div style="padding-left: 20px;">
+        <div>
+          <p-chart class="small-chart" type="pie" [responsive]="false" [data]="data" [options]="options"></p-chart>
+          <div class="dropdown-container" style="position: absolute; top: 10px; right: 10px; z-index: 10;">
+            <p-dropdown 
+              [options]="PieShartOptions" 
+              optionLabel="name" 
+              placeholder="Select a City" /> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second div taking full remaining space -->
+  <div style="flex-grow: 1; position: relative;">
+    <div class="card card-stats mb-4 mb-xl-0" style="width: 100%; height: auto; padding: 0; border: 1px solid rgba(0, 0, 0, .05); border-radius: .375rem; background-color: #fff;">
+      <div style="padding: 20px; position: relative;">
+        <p-chart type="line" [data]="data2" [options]="options" height="260px" width="1300px"/>
+        <div class="dropdown-container" style="position: absolute; top: 10px; right: 10px; z-index: 10;">
+          <p-dropdown 
+            [options]="PieShartOptions" 
+            optionLabel="name" 
+            placeholder="Select a City" /> 
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+  
+     
+
+
+
     
     <div style="margin-top: 1rem;">
         <p-card>
+          
           <p-table 
           #dt
           [value]="TicketList"
@@ -31,12 +75,12 @@
           >
           <ng-template pTemplate="caption">
             <div style="display: flex; justify-content: space-between;">
-                <p-button [outlined]="true" icon="pi pi-filter-slash" label="Clear"  />
+                <p-button [outlined]="true" icon="pi pi-filter-slash" label="Clear" (click)="Clear()" />
                 <p-iconField iconPosition="left" >
                     <p-inputIcon>
                         <i class="pi pi-search"></i>
                     </p-inputIcon>
-                    <input pInputText type="text"  placeholder="Keyboard Search"  />
+                    <input pInputText type="text"  placeholder="Keyboard Search" [(ngModel)]="searchValue" (ngModelChange)="this.Search2()" />
                 </p-iconField>
             </div>
         </ng-template>
@@ -44,31 +88,31 @@
                 <tr>
                     <th style="width:0%"><p-tableHeaderCheckbox /></th>
                     <th style="width:10%">
-                        Titre <p-columnFilter type="text" field="numeroSerie" display="menu" class="printable"/>
+                        Titre <p-columnFilter type="text" field="title" display="menu" class="printable"/>
                     </th>
                     <th style="width:13%">
-                      Resume <p-columnFilter type="text" field="numeroSerie" display="menu" class="printable"/>
+                      Resume <p-columnFilter type="text" field="resume" display="menu" class="printable"/>
                     </th>
                     <th style="width:6%">
-                        Statut <p-columnFilter type="text" field="nom" display="menu" class="printable"/>
+                        Statut <p-columnFilter type="text" field="status" display="menu" class="printable"/>
                     </th>
                     <th style="width:6%">
-                        Priorité <p-columnFilter type="text" field="technicienResponsable" display="menu" class="printable"/>
+                        Priorité <p-columnFilter type="text" field="priority" display="menu" class="printable"/>
                     </th>
                     <th style="width:10%">
-                        Utilisateur Assigné <p-columnFilter type="text" field="utilisateur" display="menu" class="printable"/>
+                        Utilisateur Assigné <p-columnFilter type="text" field="assignedUser" display="menu" class="printable"/>
                     </th>
                     <th style="width:6%">
-                        Catégorie <p-columnFilter type="text" field="modele" display="menu" class="printable"/>
+                        Catégorie <p-columnFilter type="text" field="category" display="menu" class="printable"/>
                     </th> 
                     <th style="width:7%">
-                        Rapporteur <p-columnFilter type="text" field="statut" display="menu" class="printable"/>
+                        Rapporteur <p-columnFilter type="text" field="reporter" display="menu" class="printable"/>
                     </th>
                     <th style="width:9%">
-                        Date de Création <p-columnFilter type="text" field="statut" display="menu" class="printable"/>
+                        Date de Création <p-columnFilter type="date" field="createdDate" display="menu" class="printable"/>
                     </th>
                     <th style="width:10%">
-                        Dernière Mise à Jour <p-columnFilter type="text" field="statut" display="menu" class="printable"/>
+                        Dernière Mise à Jour <p-columnFilter type="date" field="updatedDate" display="menu" class="printable"/>
                     </th>
                 </tr>
                 
@@ -79,27 +123,30 @@
                   <td>
                       <p-tableCheckbox 
                           [value]="ticket"
-                          (click)=" $event.stopPropagation() " />
+                          (click)=" $event.stopPropagation() "/>
                   </td>
                   <td>
                     <div style="display: flex; align-items: center;">
                       <p> 
-                        <i class="pi pi-star click" style="font-size: 1.25rem; margin-right: 10px;"></i> 
-                        <i class="pi pi-star-fill click" style="font-size: 1.25rem; margin-right: 10px;"></i> 
+                        <i pRipple (click)="ticket.star = !ticket.star" class="pi pi-star click" style="font-size: 1.25rem; margin-right: 10px;" *ngIf="!ticket.star" ></i> 
+                        <i pRipple (click)="ticket.star = !ticket.star" class="pi pi-star-fill click" style="font-size: 1.25rem; margin-right: 10px;" *ngIf="ticket.star"></i> 
                       </p> 
                       <span>{{ticket.title}}</span>
                   </div>
                   
                   </td>
                   <td>{{ticket.resume}}</td>
-
-                  <td>{{ticket.status}}</td>
-                  <td>{{ticket.priority}}</td>
+                  <td>
+                    <p-tag severity="success" [value]="ticket.status" [severity]="getSeverity(ticket.status)"/>
+                  </td>
+                  <td>
+                    <i class="pi pi-circle-on priority"  style="font-size: 1.5rem" [style.color]="PriorityStyle(ticket.priority)"></i>
+                  </td>
                   <td>{{ticket.assignedUser}}</td>
                   <td>{{ticket.category}}</td>
                   <td>{{ticket.reporter}}</td>
                   <td>{{ticket.createdDate | date: 'dd/MM/yyyy'}}</td>
-                  <td>{{ ticket.updatedDate | date: 'dd/MM/yyyy' }}</td>
+                  <td>{{ ticket.updatedDate | date: 'dd/MM/yyyy hh:mm' }}</td>
 
               </tr>        
               </ng-template>
@@ -108,9 +155,8 @@
               <tr>
                 <td colspan="9" style="text-align: center;">
                   <img src="https://i.ibb.co/ThYJ02d/no-data.jpg" alt="no-data" style="display: block; margin: 0 auto;" border="0">
-              </td>                
-              
-            </tr>
+                </td>                       
+              </tr>
           </ng-template>
       
       </p-table>

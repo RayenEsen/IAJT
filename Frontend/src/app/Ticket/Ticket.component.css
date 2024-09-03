@@ -1,11 +1,20 @@
- ::ng-deep .pi-star:before {
-    padding-right: 25px;
-    content: "\e937";
+/* Ensure consistent padding and content for .pi-star */
+::ng-deep .pi-star:before {
+  padding-right: 25px; /* Adjust padding as needed */
+  content: "\e937";
 }
 
+.pi-star:before {
+  padding-right: 25px; /* Consistent padding */
+  content: "\e937"; /* Unicode character for star icon */
+}
 
+.pi-star-fill:before {
+  color: #e3b253; /* Color for filled star icon */
+  content: "\e936"; /* Unicode character for filled star icon */
+}
 
-
+/* Adjust heading styles */
 h2,
 h5,
 .h2,
@@ -19,16 +28,54 @@ h5,
 
 h2,
 .h2 {
-  font-size: 1.25rem;
+  font-size: 1.25rem; /* Font size for h2 and .h2 */
+}
+
+/* Adjust padding for priority class */
+.priority {
+  padding-left: 17px; /* Padding for priority class */
+}
+
+/* Responsive adjustments for column sizes */
+@media (min-width: 992px) {
+  .col-lg-6 {
+    max-width: 50%;
+    flex: 0 0 50%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .col-xl-3 {
+    max-width: 25%;
+    flex: 0 0 25%;
+  }
+  .col-xl-6 {
+    max-width: 50%;
+    flex: 0 0 50%;
+  }
+}
+
+/* Card styles */
+.card {
+  position: relative;
 }
 
 
-.pi-star:before {
-  padding-right: 13px;
-  content: "\e937";
+
+/* Responsive layout adjustments */
+@media (min-width: 1200px) {
+  .justify-content-xl-between {
+    justify-content: space-between !important;
+  }
 }
 
-.pi-star-fill:before {
-  color: #e3b253;
-  content: "\e936";
+/* Position the dropdown container at the top-right */
+.dropdown-container {
+  position: absolute;
+  top: 10px;      /* Distance from the top of the chart */
+  right: 10px;    /* Distance from the right side of the chart */
+  z-index: 10;    /* Ensure the dropdown is on top of the chart */
+
 }
+
+

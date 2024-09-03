@@ -45,6 +45,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { TicketComponent } from './Ticket/Ticket.component';
 import { RatingModule } from 'primeng/rating';
+import { ChartModule } from 'primeng/chart';
 
 @NgModule({
   declarations: [																				
@@ -94,6 +95,7 @@ import { RatingModule } from 'primeng/rating';
     PanelModule,
     SplitButtonModule,
     SpeedDialModule,
+    ChartModule,
   ],
   providers: [MessageService , ConfirmationService],
   bootstrap: [AppComponent]

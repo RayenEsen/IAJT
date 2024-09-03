@@ -19,6 +19,7 @@
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
     "bootstrap": "^5.3.3",
+    "chart.js": "^4.4.4",
     "cron-parser": "^4.9.0",
     "d3-drag": "^3.0.0",
     "d3-selection": "^3.0.0",
