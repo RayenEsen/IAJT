@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
     // Call the userService to log in
     this.userService.loginUser(email, password).subscribe({
       next: (response) => {
-        this.sessionService.sessionStart(response)
+        this.sessionService.sessionStart(response.user)
         console.log(this.sessionService.User)
         this.router.navigate(['Accueil/Ordinateurs']);
       },
@@ -58,7 +58,7 @@ validateUserInputs(): boolean {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   // Check if all fields are filled
-  if (!this.user.nom || !this.user.prenom || !this.user.email || !this.user.password || !this.SecondPassword) {
+  if (!this.user.name || !this.user.prenom || !this.user.email || !this.user.password || !this.SecondPassword) {
     this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Tous les champs sont obligatoires.' });
     return false;
   }

@@ -15,6 +15,7 @@ export class EditProfileComponent implements OnInit {
 
   user : User = new User;
   ngOnInit() {
+    console.log(this.session.User)
     this.user=this.session.User
   }
 

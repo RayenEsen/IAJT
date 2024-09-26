@@ -11,14 +11,14 @@ constructor(private http: HttpClient) { }
 
 
 formData: FormData = new FormData();
-private Url : string = "https://api.cloudinary.com/v1_1/dlemizbf5/image/upload"
+private Url : string = "" //Here put the api
 
 
 GetImage(file: File) {
   // Append the file and additional data to FormData
   this.formData.append('file', file);
-  this.formData.append('cloud_name', 'dlemizbf5');
-  this.formData.append('upload_preset', 'eymttuzo'); 
+  this.formData.append('cloud_name', ''); //Here out the cloud name
+  this.formData.append('upload_preset', ''); //Here put the cloud preset
 }
 
 
@@ -36,8 +36,5 @@ uploadSignature(): Observable<any>{
       })
     )
 }
-
-
-
 
 }
